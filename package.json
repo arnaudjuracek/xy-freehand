@@ -1,0 +1,36 @@
+{
+  "name": "xy-freehand",
+  "description": "free hand live drawing on the makeblock XY plotter v2",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "browserify client/index.js > client/bundle.js",
+    "start": "browserify client/index.js > client/bundle.js && node server"
+  },
+  "main": "client/index.js",
+  "author": "Arnaud Juracek <arnaud.juracek@gmail.com> (http://arnaudjuracek.fr)",
+  "license": "MIT",
+  "directories": {
+    "client": "client"
+  },
+  "dependencies": {
+    "bufferutil": "^1.2.1",
+    "express": "^4.14.0",
+    "kool-shell": "github:pqml/kool-shell",
+    "socket.io": "^1.5.0",
+    "utf-8-validate": "^1.2.1",
+    "xy-plotter": "github:arnaudjuracek/xy"
+  },
+  "devDependencies": {
+    "browserify": "^13.1.0",
+    "budo": "^9.2.1",
+    "uglify-js": "^2.7.3"
+  },
+  "browserify": {
+    "transform": []
+  },
+  "keywords": [
+    "plotter",
+    "free",
+    "hand"
+  ]
+}
