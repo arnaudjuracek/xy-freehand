@@ -23,20 +23,19 @@ body {
         cursor: not-allowed;
       }
 
-    header {
-      position: relative;
-    }
+    header { position: relative; }
     header h1 { font-size: 2em; }
     header aside {
       position: absolute;
       right: 0;
       bottom: 0;
-    }
+      }
     header aside a svg{
       height: 2em;
       color: #333;
       vertical-align: middle;
-    }
+      }
+      header aside a:hover svg{ fill: #4078c0; }
 
     .toolbar {
       margin-top: 20px;
