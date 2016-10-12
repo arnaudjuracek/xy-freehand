@@ -109,3 +109,11 @@ header aside a:hover svg{ fill: #4078c0; }
   -o-transition: all 200ms cubic-bezier(0.250, 0.100, 0.250, 1.000);
   transition: all 200ms cubic-bezier(0.250, 0.100, 0.250, 1.000);
 }
+.noselect {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}

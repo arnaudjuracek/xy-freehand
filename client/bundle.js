@@ -107,6 +107,7 @@ socket.on('config', function(plotterConfig) {
 
   canvas.addEventListener('mousedown', beginDraw);
   canvas.addEventListener('mouseup', endDraw);
+  canvas.addEventListener('mouseleave', endDraw);
   canvas.addEventListener('touchstart', beginTouchDraw);
   canvas.addEventListener('touchend', endDraw);
 
