@@ -10,7 +10,7 @@ const plotter = require('xy-plotter')();
 const file = plotter.File();
 const serial = plotter.Serial('/dev/tty.wchusbserial1410', {
   // disconnectOnJobEnd: false,
-  verbose: true,
+  verbose: false,
   progressBar: false,
 });
 

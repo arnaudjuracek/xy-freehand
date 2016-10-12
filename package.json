@@ -1,8 +1,9 @@
 {
   "name": "xy-freehand",
   "description": "free hand live drawing on the makeblock XY plotter v2",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "scripts": {
+    "dev": "budo client/index.js:bundle.js -P -l -d client",
     "build": "browserify client/index.js > client/bundle.js",
     "start": "browserify client/index.js > client/bundle.js && node server"
   },

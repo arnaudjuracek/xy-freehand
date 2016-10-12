@@ -24,6 +24,58 @@ socket.on('config', function(plotterConfig) {
   var p_position = {x: 0, y: 0};
   var pen_down = false;
 
+  var history = {
+    // https://codepen.io/abidibo/pen/rmGBc
+
+    undoBtn: document.getElementById('undo'),
+    redoBtn: document.getElementById('redo'),
+    redo_list: [],
+    undo_list: [],
+    clear: function() {
+      this.undoBtn.classList.add('disabled');
+      this.redoBtn.classList.add('disabled');
+      this.redo_list = [];
+      this.undo_list = [];
+    },
+
+    saveState: function(canvas, list, keep_redo) {
+      keep_redo = keep_redo || false;
+      if(!keep_redo) {
+        this.redo_list = [];
+      }
+
+      (list || this.undo_list).push({
+        data: canvas.toDataURL(),
+        lines: [...lines],
+      });
+
+      if (this.undo_list.length > 0) this.undoBtn.classList.remove('disabled');
+      if (this.redo_list.length > 0) this.redoBtn.classList.remove('disabled');
+
+    },
+    undo: function(canvas, ctx) {
+      this.restoreState(canvas, ctx, this.undo_list, this.redo_list);
+    },
+    redo: function(canvas, ctx) {
+      this.restoreState(canvas, ctx, this.redo_list, this.undo_list);
+    },
+    restoreState: function(canvas, ctx,  pop, push) {
+      if(pop.length) {
+        this.saveState(canvas, push, true);
+        var restore_state = pop.pop();
+        var img = new Image();
+        img.src = restore_state.data;
+        lines = restore_state.lines;
+        img.onload = function() {
+          ctx.clearRect(0, 0, 600, 400);
+          ctx.drawImage(img, 0, 0, 600, 400, 0, 0, 600, 400);
+        }
+      }
+      if(this.undo_list.length === 0) this.undoBtn.classList.add('disabled');
+      if(this.redo_list.length === 0) this.redoBtn.classList.add('disabled');
+    }
+  }
+
   canvas.width = plotterConfig.height;
   canvas.height = plotterConfig.width;
 
@@ -45,9 +97,9 @@ socket.on('config', function(plotterConfig) {
   });
 
   (function enable() {
-    canvas.classList.remove('disabled');
-    var inputs = document.getElementsByTagName('button');
-    for (var i = 0; i < inputs.length; i++) inputs[i].disabled = false;
+    document.getElementById('canvas').classList.remove('disabled');
+    document.getElementById('clear').classList.remove('disabled');
+    document.getElementById('send').classList.remove('disabled');
   })();
 
   // -----------------------------------------
@@ -69,6 +121,7 @@ socket.on('config', function(plotterConfig) {
   });
 
   function beginDraw(e) {
+    history.saveState(canvas);
     pen_down = true;
     position.x = p_position.x = e.offsetX / scale;
     position.y = p_position.y = e.offsetY / scale;
@@ -104,10 +157,20 @@ socket.on('config', function(plotterConfig) {
     ctx.beginPath();
     ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+    lines = [];
+    history.clear();
   });
 
   window.document.getElementById('clear').addEventListener('click', function() {
     clear();
+  });
+
+  window.document.getElementById('undo').addEventListener('click', function() {
+    history.undo(canvas, ctx);
+  });
+
+  window.document.getElementById('redo').addEventListener('click', function() {
+    history.redo(canvas, ctx);
   });
 
 
@@ -125,8 +188,8 @@ socket.on('config', function(plotterConfig) {
   }
 
   function drawLine(fromx, fromy, tox, toy){
-    if (line.length === 0) line.push([fromy, canvas.width - fromx]);
-    line.push([toy, canvas.width - tox]);
+    if (line.length === 0) line.push([fromy, fromx]);
+    line.push([toy, tox]);
 
     ctx.beginPath();
     ctx.moveTo(fromx, fromy);
@@ -135,9 +198,10 @@ socket.on('config', function(plotterConfig) {
   }
 
   function clear() {
+    lines = [];
+    history.saveState(canvas);
     ctx.beginPath();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    lines = [];
   }
 
 
