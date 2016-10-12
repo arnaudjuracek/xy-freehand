@@ -123,12 +123,17 @@ socket.on('config', function(plotterConfig) {
 
   function beginDraw(e) {
     history.saveState(canvas);
+    history.redo_list = [];
+    history.redoBtn.classList.add('disabled');
     pen_down = true;
     position.x = p_position.x = e.offsetX / scale;
     position.y = p_position.y = e.offsetY / scale;
   }
 
   function beginTouchDraw(e) {
+    history.saveState(canvas);
+    history.redo_list = [];
+    history.redoBtn.classList.add('disabled');
     var finger = getTouchPos(e);
     position.x = p_position.x = finger.x / scale;
     position.y = p_position.y = finger.y / scale;
